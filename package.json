@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "start": "npx nodemon ./server.js"
+  },
+  "name": "rest-api-design",
+  "version": "",
+  "description": "",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.2.13"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
