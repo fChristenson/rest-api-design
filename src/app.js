@@ -11,6 +11,7 @@ app.get(
     let { offset, limit, fields } = req.query;
     offset = parseInt(offset);
     limit = parseInt(limit);
+    limit = Math.min(limit, 50);
     fields = fields ? fields.split(",") : undefined;
     const users = await userService.listUsers(offset, limit, fields);
     res.json(users);
