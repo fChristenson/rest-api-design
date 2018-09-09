@@ -1,6 +1,7 @@
 const express = require("express");
 const { userService } = require("./services");
 const catchException = require("./middlewares/catchException");
+const ErrorWithStatusCode = require("./errors/ErrorWithStatusCode");
 const app = express();
 
 app.use(express.json());
@@ -8,6 +9,7 @@ app.use(express.json());
 app.get(
   "/api/v1/users",
   catchException(async (req, res) => {
+    throw new ErrorWithStatusCode("foo", 404);
     let { offset, limit, fields } = req.query;
     offset = parseInt(offset);
     limit = parseInt(limit);
@@ -24,6 +26,23 @@ app.post(
     const { firstName, lastName } = req.body;
     const user = await userService.createUser(firstName, lastName);
     res.json(user);
+  })
+);
+
+// Two different approaches to handle custom commands
+app.post(
+  "/api/v1/users/:userId",
+  catchException(async (req, res) => {
+    const { command } = req.query;
+
+    switch (command) {
+      case "send-email":
+        //TODO: Send email to user about something
+        return res.json({ message: "Email sent" });
+
+      default:
+        return res.json({ message: `${command} is not a valid command` });
+    }
   })
 );
 
@@ -66,7 +85,8 @@ app.delete(
 );
 
 app.use((error, req, res, next) => {
-  res.json({ message: error.message });
+  console.error(error);
+  res.status(error.statusCode || 500).json({ message: error.message });
 });
 
 module.exports = app;
