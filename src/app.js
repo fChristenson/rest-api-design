@@ -9,7 +9,6 @@ app.use(express.json());
 app.get(
   "/api/v1/users",
   catchException(async (req, res) => {
-    throw new ErrorWithStatusCode("foo", 404);
     let { offset, limit, fields } = req.query;
     offset = parseInt(offset);
     limit = parseInt(limit);
